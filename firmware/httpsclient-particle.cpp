@@ -26,7 +26,7 @@ unsigned char *CAstream;
 tlsExtension_t *extension;
 int32 len, sessionFlag, extLen;
 ssl_t *ssl;
-unsigned char *g_buf, *ext;
+unsigned char *g_buf, *ext, *received_msg;
 sslSessOpts_t options;
 
 const int g_key_len = 2048;
@@ -318,7 +318,7 @@ static int32 TCPRead (int len) {
 }
 
 int httpsClientConnection(unsigned char * requestContent, uint32 msg_len,
-			  const char * message) {
+			  const char * message, unsigned char * received_msg ) {
   int32 rc, len, transferred;
   g_httpRequestHdr = requestContent;
 
@@ -457,7 +457,8 @@ int httpsClientConnection(unsigned char * requestContent, uint32 msg_len,
     g_bytes_received += len;
     if (g_https_trace) {
       for (int i = 0 ; i < len; i++) {
-	Serial.print((char)g_buf[i]);
+	    Serial.print((char)g_buf[i]);
+		received_msg += g_buf[i];
       }
       Serial.println();
     }
